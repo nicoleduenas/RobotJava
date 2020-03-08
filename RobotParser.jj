@@ -1,0 +1,577 @@
+/*
+Basic Robot Grammar
+Author: Silvia Takahashi
+ **/
+
+options
+{
+  LOOKAHEAD= 1;
+
+  IGNORE_CASE = true;
+  STATIC = false;
+}
+
+PARSER_BEGIN(RobotParser)
+package uniandes.lym.robot.control;
+import uniandes.lym.robot.kernel.*;
+import java.io.*;
+@ SuppressWarnings("serial") 
+public class RobotParser
+{
+  private RobotWorldDec robotw;
+  private String[] vars;
+  private int[] values;
+
+  void setWorld(RobotWorld w)
+  {
+    robotw = (RobotWorldDec) w;	
+  }
+
+  void delay(int d)
+  {
+    try
+    {
+      Thread.sleep(d);
+    }
+    catch (InterruptedException e)
+    {
+      System.err.format("IOException: %s%n", e);
+    }
+  }
+}
+
+PARSER_END(RobotParser)
+
+SKIP :
+{
+  " "
+| 	"\r"
+| 	"\t"
+| "\n"
+| "\r\n"
+}
+
+TOKEN : /* Command  names */
+{
+    < T_MOVE : "Move" >
+| 	< T_TURNRIGHT : "TURNRIGHT" >
+| 	< T_PUTB : "PutB" >
+| 	< T_PICKB : "PickB" >
+| 	< T_PUTC : "PutC" >
+| 	< T_PICKC : "PickC" >
+|   < T_ASSIGN: "Assign" >
+|   < T_TURN : "Turn" >
+|   < T_FACE: "Face" >
+|   < T_PUT : "Put" >
+|   < T_PICK: "Pick" >
+|   < T_SKIP : "Skip" >
+|   < T_FACING:  "facing" >
+| 	< T_CANPUT:  "canPut" >
+|   < T_CANPICK:  "canPick" >
+|   < T_CANMOVE: "canMove" >
+|   < T_NOT:  "not" >
+|   < T_IF: "if" >
+|   < T_WHILE: "while" >
+|   < T_REPEAT: "Repeat" >
+|   < VARS: "VARS" >
+|   < T_BEGIN: "BEGIN" >
+|   < T_END: "END" >
+
+ 
+}
+
+TOKEN : /* parenthesis and comma */
+{
+ < PI: ":" >
+| < PD: ":" >
+| < TO: "to" >
+| < SC: ";" >
+| < OF "of" >
+| < TOTHE "toThe" >
+}
+
+TOKEN: /* Direction */
+{
+< DIRECTION:  "left"|"right"|"around"|"back"|"front" >
+}
+
+TOKEN: /* Orientation */
+{
+<FACE: "north"|"south"|"east"|"west" > 
+}
+
+TOKEN: /* types */
+{
+< NUM: (["0"-"9"])+ >
+| < VAR: (["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*)>
+| < XT: "Balloons"|"Chips" >
+}
+
+void Assign():
+{
+   boolean en = false;
+   String var;
+   int value;
+   
+}
+{
+ < T_ASSIGN >< PI ><VAR >{value=Integer.parseInt(token.image); }<TO><VAR>{var = token.image;}<SC >
+{
+ 
+ for (int i = 0; i < vars.length && !en; i++) {
+			System.out.println(vars[i] + " - " + var);
+			if (vars[i].equals(var)) {
+				values[i] = value;
+				en = true;
+				System.out.println(values[i]);
+			}
+		}
+		if (en = false) {
+			throw new Error("A variable of name: " + var + "was not found");
+		} 
+}
+}
+
+void Move():
+{
+  String n;
+  int num = 0;
+}
+{
+< T_MOVE ><PI >(<VAR >|< NUM >) {n = token.image;}<SC >
+{
+  try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		robotw.moveForward(num);
+		}
+}
+
+void Turn():
+{String d;}
+{
+  <T_TURN ><PI ><DIRECTION > { d = token.image;}<SC >
+  {
+    switch (d) {
+		case "right":
+			robotw.turnRight();
+			break;
+		case "left":
+			robotw.turnRight();
+			robotw.turnRight();
+			robotw.turnRight();
+			break;
+		}
+  }
+}
+
+void Face():
+{String O;}
+{
+< T_FACE ><PI ><FACE > { O = token.image; }<SC >
+{
+switch (O) {
+		case "north":
+			while (!(robotw.getOrientation() == 0)) {
+				robotw.turnRight();
+			}
+			break;
+		case "south":
+			while (!(robotw.getOrientation() == 1)) {
+				robotw.turnRight();
+			}
+			break;
+		case "east":
+			while (!(robotw.getOrientation() == 2)) {
+				robotw.turnRight();
+			}
+			break;
+		case "west":
+			while (!(robotw.getOrientation() == 3)) {
+				robotw.turnRight();
+			}
+			break;
+		}
+}
+}
+
+void Put():
+{
+  String X;
+  int num = 0;
+  String n;
+}
+{
+< T_PUT ><PI>(<VAR >|< NUM >) { n = token.image;}<OF ><PI>< XT> { X = token.image;}<SC >
+{
+  try {
+		  num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		switch (X) {
+		case "Ballons":
+			robotw.putBalloons(num);
+			break;
+		case "Chips":
+			robotw.putChips(num);
+			break;
+		}
+}
+}
+
+void Pick():
+{String X;
+int num = 0;
+String n; }
+{
+< T_PICK ><PI >(<VAR >|< NUM >) { n = token.image;}<OF ><PI ><XT > { X= token.image;}<SC >
+{
+  try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		switch (X) {
+		case "Ballons":
+			robotw.grabBalloons(num);
+			break;
+		case "Chips":
+			robotw.pickChips(num);
+			break;
+		}
+}
+}
+
+void MoveDir():
+{String D;
+String n;
+int num =0; }
+{
+<T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image;}<TOTHE >< DIRECTION > { D = token.image; }<SC >
+{
+		try {
+			num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		switch (D) {
+		case "front":
+			robotw.moveVertically(num);
+			break;
+		case "back":
+			robotw.moveVertically(-num);
+			break;
+		case "right":
+			robotw.moveHorizontally(num);
+			break;
+		case "left":
+			robotw.moveHorizontally(-num);
+			break;
+		}
+}
+}
+
+void MoveOr():
+{String n;
+String O;
+int num =0;}
+{
+< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI > { O = token.image; }<PD ><SC >
+{
+  try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		switch (O) {
+		case "north":
+			while (!(robotw.getOrientation() == 0)) {
+				robotw.turnRight();
+			}
+			break;
+		case "south":
+			while (!(robotw.getOrientation() == 1)) {
+				robotw.turnRight();
+			}
+			break;
+		case "east":
+			while (!(robotw.getOrientation() == 2)) {
+				robotw.turnRight();
+			}
+			break;
+		case "west":
+			while (!(robotw.getOrientation() == 3)) {
+				robotw.turnRight();
+			}
+			break;
+		}
+		robotw.moveForward(num);
+}
+}
+boolean facing():
+{String O;}
+{
+  < T_FACING ><PI ><FACE > { O=token.image; }
+  {
+    switch(O) {
+      case "north":
+         return robotw.facingNorth();
+      case "south":
+         return robotw.facingSouth();
+      case "east":
+         return robotw.facingEast();
+      case "west":
+         return robotw.facingWest();
+    }
+    
+  }
+}
+
+boolean canput():
+{String X;
+String n;
+int num =0;}
+{
+  < T_CANPUT ><PI >(<VAR >|< NUM >) { n = token.image;}<OF ><XT > { X=token.image;}
+  {
+    try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		  switch (X) {
+		case "Ballons":
+			if(robotw.getMyBalloons()< num) { return false;}
+			break;
+		case "Chips":
+			if(num>robotw.freeSpacesForChips()) { return false;}
+			break;
+		}
+	return true;
+		
+  }
+}
+
+boolean canpick():
+{String X;
+String n;
+int num =0;}
+{
+  < T_CANPICK ><PI >(<VAR >|< NUM >) { n = token.image;}<OF ><XT > { X=token.image;}
+  {
+    try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		  switch (X) {
+		case "Ballons":
+			if(robotw.countBalloons(robotw.getPosition()) < num) { return false;}
+			break;
+		case "Chips":
+			if(num>robotw.chipsToPick()) { return false;}
+			break;
+		}
+	return true;
+		
+  }
+}
+
+boolean canmove():
+{String D;}
+{
+< T_CANMOVE ><PI ><FACE > { D = token.image;}
+{
+   switch(D) {
+      case "north":
+         return !robotw.atTop();
+      case "south":
+         return !robotw.atBottom();
+      case "east":
+         return !robotw.atRight();
+      case "west":
+         return !robotw.atLeft();
+    }
+}
+}
+boolean not():
+{ boolean v;}
+{
+  < T_NOT ><PI >cond() { v =cond();}
+  {
+    return !v;
+  }
+}
+
+void block():
+{ }
+{
+  (Assign()|Move()|Turn()|Face()|Put()|Pick()|MoveDir()|MoveOr())+
+}
+
+boolean cond():
+{ }
+{
+  (canmove() { return canmove();}| canpick(){ return canpick(); }|canput() { return canput(); }|facing() { return facing(); })    
+}
+
+boolean cond1():
+{
+}
+{
+  (cond()|not() { return not(); })
+}
+void if1():
+{ boolean v;int looks =0;
+}
+{
+<T_IF ><PI >cond()
+{v = cond1();
+if(v) { looks = 2;}
+else
+looks = 4;
+}
+< COMA >block()< COMA >block()<PD >
+
+}
+
+void vars():
+{ int i=0;}
+{
+  < VARS >(<VAR > { vars[i]=token.image;i++; } (< COMA>(<VAR >|< NUM >){ vars[i]=token.image;i++; })*)
+}
+void while1():
+{
+  boolean v;
+}
+{
+  < T_WHILE ><PI >cond1() {v = cond1(); }<COMA >block()< PD >
+  {
+   while(v) {
+     block();
+   }
+  }  
+}
+
+void repeat():
+{String n;
+int num =0;
+int j=0;}
+{
+  <T_REPEAT ><PI >(<VAR >|< NUM >) { n = token.image; }block()< PD >
+  {
+    
+    try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+  while(j<num) {
+    block();
+    j++;
+  }
+}
+}
+
+void controlestr():
+{ }
+{
+  (if1()|while1()|repeat())
+}
+boolean instructions(StringBuffer system) :
+{	
+  String output = new String();
+}
+{
+  (
+    (      
+    (
+      < T_TURNRIGHT >
+      {
+        robotw.turnRight();
+      }
+    | < T_MOVE >
+      {
+        robotw.moveForward(1);
+      }
+    | < T_PUTB >
+      {
+        robotw.putBalloons(1);
+      }								
+    | < T_PICKB >
+      {
+        robotw.grabBalloons(1);
+      }
+    | < T_PUTC >
+      {
+        robotw.putChips(1);
+      }								
+    | < T_PICKC >
+      {
+        robotw.pickChips(1);
+      }
+    )
+    ";"
+  )
+| "ROBOT_R" [vars()]<T_BEGIN >(block()|controlestr())+<T_END >
+
+    {
+      delay(1000);
+    }
+  )+
+  < EOF >
+  {
+    return true;
+  }
+}
