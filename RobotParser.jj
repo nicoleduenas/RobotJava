@@ -86,8 +86,9 @@ TOKEN : /* parenthesis and comma */
 | < PD: ":" >
 | < TO: "to" >
 | < SC: ";" >
-| < OF "of" >
-| < TOTHE "toThe" >
+| < OF: "of" >
+| < TOTHE: "toThe" >
+| < COMA: "," >
 }
 
 TOKEN: /* Direction */
