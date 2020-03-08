@@ -304,7 +304,7 @@ void MoveOr():
 String O;
 int num =0;}
 {
-< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI > { O = token.image; }<PD ><SC >
+< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI ><FACE > { O = token.image; }<SC >
 {
   try {
 		num = Integer.parseInt(n);
