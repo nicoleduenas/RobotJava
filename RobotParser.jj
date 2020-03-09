@@ -9,7 +9,7 @@ options
 
   IGNORE_CASE = true;
   STATIC = false;
-}
+} 
 
 PARSER_BEGIN(RobotParser)
 package uniandes.lym.robot.control;
