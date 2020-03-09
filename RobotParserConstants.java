@@ -33,51 +33,53 @@ public interface RobotParserConstants {
   /** RegularExpression Id. */
   int T_PICK = 16;
   /** RegularExpression Id. */
-  int T_MOVEDIR = 17;
+  int T_SKIP = 17;
   /** RegularExpression Id. */
-  int T_SKIP = 18;
+  int T_FACING = 18;
   /** RegularExpression Id. */
-  int T_MOVE1 = 19;
+  int T_CANPUT = 19;
   /** RegularExpression Id. */
-  int T_FACING = 20;
+  int T_CANPICK = 20;
   /** RegularExpression Id. */
-  int T_CANPUT = 21;
+  int T_CANMOVE = 21;
   /** RegularExpression Id. */
-  int T_CANPICK = 22;
+  int T_NOT = 22;
   /** RegularExpression Id. */
-  int T_CANMOVE = 23;
+  int T_IF = 23;
   /** RegularExpression Id. */
-  int T_NOT = 24;
+  int T_WHILE = 24;
   /** RegularExpression Id. */
-  int T_IF = 25;
+  int T_REPEAT = 25;
   /** RegularExpression Id. */
-  int T_WHILE = 26;
+  int VARS = 26;
   /** RegularExpression Id. */
-  int T_REPEAT = 27;
+  int T_BEGIN = 27;
   /** RegularExpression Id. */
-  int VARS = 28;
+  int T_END = 28;
   /** RegularExpression Id. */
-  int T_BEGIN = 29;
+  int PI = 29;
   /** RegularExpression Id. */
-  int T_END = 30;
+  int TO = 30;
   /** RegularExpression Id. */
-  int PI = 31;
+  int SC = 31;
   /** RegularExpression Id. */
-  int PD = 32;
+  int OF = 32;
   /** RegularExpression Id. */
-  int COMA = 33;
+  int TOTHE = 33;
   /** RegularExpression Id. */
-  int SC = 34;
+  int COMA = 34;
   /** RegularExpression Id. */
-  int DIRECTION = 35;
+  int INDIR = 35;
   /** RegularExpression Id. */
-  int FACE = 36;
+  int DIRECTION = 36;
   /** RegularExpression Id. */
-  int NUM = 37;
+  int FACE = 37;
   /** RegularExpression Id. */
-  int VAR = 38;
+  int NUM = 38;
   /** RegularExpression Id. */
-  int XT = 39;
+  int VAR = 39;
+  /** RegularExpression Id. */
+  int XT = 40;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -101,9 +103,7 @@ public interface RobotParserConstants {
     "\"Face\"",
     "\"Put\"",
     "\"Pick\"",
-    "\"MoveDir\"",
     "\"Skip\"",
-    "\"Move(\"",
     "\"facing\"",
     "\"canPut\"",
     "\"canPick\"",
@@ -115,10 +115,13 @@ public interface RobotParserConstants {
     "\"VARS\"",
     "\"BEGIN\"",
     "\"END\"",
-    "\"(\"",
-    "\")\"",
-    "\",\"",
+    "\":\"",
+    "\"to\"",
     "\";\"",
+    "\"of\"",
+    "\"toThe\"",
+    "\",\"",
+    "\"inDir\"",
     "<DIRECTION>",
     "<FACE>",
     "<NUM>",

@@ -515,7 +515,7 @@ boolean not():
 void block():
 { }
 {
-  (Assign()|Move()|Turn()|Face()|Put()|Pick()|MoveDir()|MoveOr())+
+  (Assign()|Move()|Turn()|Face()|Put()|Pick())
 }
 
 boolean cond():
