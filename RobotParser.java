@@ -53,6 +53,8 @@ public class RobotParser implements RobotParserConstants {
   final public void Move() throws ParseException {
   String n;
   int num = 0;
+  String D;
+  String O;
     jj_consume_token(T_MOVE);
     jj_consume_token(PI);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -727,119 +729,56 @@ int j=0;
 
   final public boolean instructions(StringBuffer system) throws ParseException {
   String output = new String();
+    jj_consume_token(41);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case VARS:
+      vars();
+      break;
+    default:
+      jj_la1[14] = jj_gen;
+      ;
+    }
+    jj_consume_token(T_BEGIN);
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case T_MOVE:
-      case T_TURNRIGHT:
-      case T_PUTB:
-      case T_PICKB:
-      case T_PUTC:
-      case T_PICKC:
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case T_TURNRIGHT:
-          jj_consume_token(T_TURNRIGHT);
-        robotw.turnRight();
-          break;
-        case T_MOVE:
-          jj_consume_token(T_MOVE);
-        robotw.moveForward(1);
-          break;
-        case T_PUTB:
-          jj_consume_token(T_PUTB);
-        robotw.putBalloons(1);
-          break;
-        case T_PICKB:
-          jj_consume_token(T_PICKB);
-        robotw.grabBalloons(1);
-          break;
-        case T_PUTC:
-          jj_consume_token(T_PUTC);
-        robotw.putChips(1);
-          break;
-        case T_PICKC:
-          jj_consume_token(T_PICKC);
-        robotw.pickChips(1);
-          break;
-        default:
-          jj_la1[14] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
-        jj_consume_token(SC);
+      case T_ASSIGN:
+      case T_TURN:
+      case T_FACE:
+      case T_PUT:
+      case T_PICK:
+        block();
         break;
-      case 41:
-        jj_consume_token(41);
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case VARS:
-          vars();
-          break;
-        default:
-          jj_la1[15] = jj_gen;
-          ;
-        }
-        jj_consume_token(T_BEGIN);
-        label_3:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case T_MOVE:
-          case T_ASSIGN:
-          case T_TURN:
-          case T_FACE:
-          case T_PUT:
-          case T_PICK:
-            block();
-            break;
-          case T_IF:
-          case T_WHILE:
-          case T_REPEAT:
-            controlestr();
-            break;
-          default:
-            jj_la1[16] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case T_MOVE:
-          case T_ASSIGN:
-          case T_TURN:
-          case T_FACE:
-          case T_PUT:
-          case T_PICK:
-          case T_IF:
-          case T_WHILE:
-          case T_REPEAT:
-            ;
-            break;
-          default:
-            jj_la1[17] = jj_gen;
-            break label_3;
-          }
-        }
-        jj_consume_token(T_END);
-      delay(1000);
+      case T_IF:
+      case T_WHILE:
+      case T_REPEAT:
+        controlestr();
         break;
       default:
-        jj_la1[18] = jj_gen;
+        jj_la1[15] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case T_MOVE:
-      case T_TURNRIGHT:
-      case T_PUTB:
-      case T_PICKB:
-      case T_PUTC:
-      case T_PICKC:
-      case 41:
+      case T_ASSIGN:
+      case T_TURN:
+      case T_FACE:
+      case T_PUT:
+      case T_PICK:
+      case T_IF:
+      case T_WHILE:
+      case T_REPEAT:
         ;
         break;
       default:
-        jj_la1[19] = jj_gen;
+        jj_la1[16] = jj_gen;
         break label_2;
       }
     }
+    jj_consume_token(T_END);
+      delay(1000);
     jj_consume_token(0);
     {if (true) return true;}
     throw new Error("Missing return statement in function");
@@ -854,7 +793,7 @@ int j=0;
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[20];
+  final private int[] jj_la1 = new int[17];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -862,10 +801,10 @@ int j=0;
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1f040,0x3c0000,0x7c0000,0x0,0x0,0x0,0x3800000,0xfc0,0x4000000,0x381f040,0x381f040,0xfc0,0xfc0,};
+      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1f040,0x3c0000,0x7c0000,0x0,0x0,0x0,0x3800000,0x4000000,0x381f040,0x381f040,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0xc0,0xc0,0xc0,0xc0,0xc0,0xc0,0xc0,0x0,0x0,0x0,0x4,0xc0,0xc0,0x0,0x0,0x0,0x0,0x0,0x200,0x200,};
+      jj_la1_1 = new int[] {0xc0,0xc0,0xc0,0xc0,0xc0,0xc0,0xc0,0x0,0x0,0x0,0x4,0xc0,0xc0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -879,7 +818,7 @@ int j=0;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -893,7 +832,7 @@ int j=0;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -903,7 +842,7 @@ int j=0;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -913,7 +852,7 @@ int j=0;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -922,7 +861,7 @@ int j=0;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -931,7 +870,7 @@ int j=0;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -987,7 +926,7 @@ int j=0;
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 17; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

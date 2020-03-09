@@ -135,6 +135,8 @@ void Move():
 {
   String n;
   int num = 0;
+  String D;
+  String O;
 }
 {
 < T_MOVE ><PI >(<VAR >|< NUM >) {n = token.image;}<SC >
@@ -598,42 +600,13 @@ boolean instructions(StringBuffer system) :
   String output = new String();
 }
 {
-  (
-    (      
-    (
-      < T_TURNRIGHT >
-      {
-        robotw.turnRight();
-      }
-    | < T_MOVE >
-      {
-        robotw.moveForward(1);
-      }
-    | < T_PUTB >
-      {
-        robotw.putBalloons(1);
-      }								
-    | < T_PICKB >
-      {
-        robotw.grabBalloons(1);
-      }
-    | < T_PUTC >
-      {
-        robotw.putChips(1);
-      }								
-    | < T_PICKC >
-      {
-        robotw.pickChips(1);
-      }
-    )
-    ";"
-  )
-| "ROBOT_R" [vars()]<T_BEGIN >(block()|controlestr())+<T_END >
+ 
+ "ROBOT_R" [vars()]<T_BEGIN >(block()|controlestr())+<T_END >
 
     {
       delay(1000);
     }
-  )+
+  
   < EOF >
   {
     return true;
