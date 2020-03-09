@@ -86,6 +86,7 @@ TOKEN : /* parenthesis and comma */
 | < OF: "of" >
 | < TOTHE: "toThe" >
 | < COMA: "," >
+| < INDIR: "inDir" >
 }
 
 TOKEN: /* Direction */
@@ -150,7 +151,7 @@ void Move():
 			}
 		}
 		robotw.moveForward(num);
-		}
+}
 		<T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image;}<TOTHE >< DIRECTION > { D = token.image; }<SC >
 {
 		try {
@@ -178,7 +179,8 @@ void Move():
 			robotw.moveHorizontally(-num);
 			break;
 		}
-}< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI ><FACE > { O = token.image; }<SC >
+}
+< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI ><FACE > { O = token.image; }<SC >
 {
   try {
 		num = Integer.parseInt(n);
@@ -214,7 +216,9 @@ void Move():
 			break;
 		}
 		robotw.moveForward(num);
-} }
+}
+}
+
 void Turn():
 {String d;}
 {
@@ -536,7 +540,7 @@ if(v) { looks = 2;}
 else
 looks = 4;
 }
-< COMA >block()< COMA >block()<PD >
+< COMA >block()< COMA >block()
 
 }
 
@@ -550,7 +554,7 @@ void while1():
   boolean v;
 }
 {
-  < T_WHILE ><PI >cond1() {v = cond1(); }<COMA >block()< PD >
+  < T_WHILE ><PI >cond1() {v = cond1(); }<COMA >block()
   {
    while(v) {
      block();
@@ -563,7 +567,7 @@ void repeat():
 int num =0;
 int j=0;}
 {
-  <T_REPEAT ><PI >(<VAR >|< NUM >) { n = token.image; }block()< PD >
+  <T_REPEAT ><PI >(<VAR >|< NUM >) { n = token.image; }block()
   {
     
     try {
