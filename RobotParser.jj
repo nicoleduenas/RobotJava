@@ -76,14 +76,11 @@ TOKEN : /* Command  names */
 |   < VARS: "VARS" >
 |   < T_BEGIN: "BEGIN" >
 |   < T_END: "END" >
-
- 
 }
 
 TOKEN : /* parenthesis and comma */
 {
  < PI: ":" >
-| < PD: ":" >
 | < TO: "to" >
 | < SC: ";" >
 | < OF: "of" >
@@ -116,7 +113,7 @@ void Assign():
    
 }
 {
- < T_ASSIGN >< PI ><VAR >{value=Integer.parseInt(token.image); }<TO><VAR>{var = token.image;}<SC >
+ < T_ASSIGN >< PI ><NUM >{value=Integer.parseInt(token.image); }<TO><VAR>{var = token.image;}<SC >
 {
  
  for (int i = 0; i < vars.length && !en; i++) {
@@ -154,8 +151,70 @@ void Move():
 		}
 		robotw.moveForward(num);
 		}
-}
-
+		<T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image;}<TOTHE >< DIRECTION > { D = token.image; }<SC >
+{
+		try {
+			num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		switch (D) {
+		case "front":
+			robotw.moveVertically(num);
+			break;
+		case "back":
+			robotw.moveVertically(-num);
+			break;
+		case "right":
+			robotw.moveHorizontally(num);
+			break;
+		case "left":
+			robotw.moveHorizontally(-num);
+			break;
+		}
+}< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI ><FACE > { O = token.image; }<SC >
+{
+  try {
+		num = Integer.parseInt(n);
+		} catch (NumberFormatException e) {
+			boolean en = false;
+			for (int i = 0; i < vars.length && !en; i++) {
+				if (vars[i].equals(n)) {
+					num = values[i];
+					en = true;
+				}
+			}
+		}
+		switch (O) {
+		case "north":
+			while (!(robotw.getOrientation() == 0)) {
+				robotw.turnRight();
+			}
+			break;
+		case "south":
+			while (!(robotw.getOrientation() == 1)) {
+				robotw.turnRight();
+			}
+			break;
+		case "east":
+			while (!(robotw.getOrientation() == 2)) {
+				robotw.turnRight();
+			}
+			break;
+		case "west":
+			while (!(robotw.getOrientation() == 3)) {
+				robotw.turnRight();
+			}
+			break;
+		}
+		robotw.moveForward(num);
+} }
 void Turn():
 {String d;}
 {
@@ -264,84 +323,84 @@ String n; }
 }
 }
 
-void MoveDir():
-{String D;
-String n;
-int num =0; }
-{
-<T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image;}<TOTHE >< DIRECTION > { D = token.image; }<SC >
-{
-		try {
-			num = Integer.parseInt(n);
-		} catch (NumberFormatException e) {
-			boolean en = false;
-			for (int i = 0; i < vars.length && !en; i++) {
-				if (vars[i].equals(n)) {
-					num = values[i];
-					en = true;
-				}
-			}
-		}
-		switch (D) {
-		case "front":
-			robotw.moveVertically(num);
-			break;
-		case "back":
-			robotw.moveVertically(-num);
-			break;
-		case "right":
-			robotw.moveHorizontally(num);
-			break;
-		case "left":
-			robotw.moveHorizontally(-num);
-			break;
-		}
-}
-}
-
-void MoveOr():
-{String n;
-String O;
-int num =0;}
-{
-< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI ><FACE > { O = token.image; }<SC >
-{
-  try {
-		num = Integer.parseInt(n);
-		} catch (NumberFormatException e) {
-			boolean en = false;
-			for (int i = 0; i < vars.length && !en; i++) {
-				if (vars[i].equals(n)) {
-					num = values[i];
-					en = true;
-				}
-			}
-		}
-		switch (O) {
-		case "north":
-			while (!(robotw.getOrientation() == 0)) {
-				robotw.turnRight();
-			}
-			break;
-		case "south":
-			while (!(robotw.getOrientation() == 1)) {
-				robotw.turnRight();
-			}
-			break;
-		case "east":
-			while (!(robotw.getOrientation() == 2)) {
-				robotw.turnRight();
-			}
-			break;
-		case "west":
-			while (!(robotw.getOrientation() == 3)) {
-				robotw.turnRight();
-			}
-			break;
-		}
-		robotw.moveForward(num);
-}
-}
+//void MoveDir():
+//{String D;
+//String n;
+//int num =0; }
+//{
+//<T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image;}<TOTHE >< DIRECTION > { D = token.image; }<SC >
+//{
+//		try {
+//			num = Integer.parseInt(n);
+//		} catch (NumberFormatException e) {
+//			boolean en = false;
+//			for (int i = 0; i < vars.length && !en; i++) {
+//				if (vars[i].equals(n)) {
+//					num = values[i];
+//					en = true;
+//				}
+//			}
+//		}
+//		switch (D) {
+//		case "front":
+//			robotw.moveVertically(num);
+//			break;
+//		case "back":
+//			robotw.moveVertically(-num);
+//			break;
+//		case "right":
+//			robotw.moveHorizontally(num);
+//			break;
+//		case "left":
+//			robotw.moveHorizontally(-num);
+//			break;
+//		}
+//}
+//}
+//
+//void MoveOr():
+//{String n;
+//String O;
+//int num =0;}
+//{
+//< T_MOVE ><PI >(<VAR >|< NUM >) { n = token.image; }<INDIR ><PI ><FACE > { O = token.image; }<SC >
+//{
+//  try {
+//		num = Integer.parseInt(n);
+//		} catch (NumberFormatException e) {
+//			boolean en = false;
+//			for (int i = 0; i < vars.length && !en; i++) {
+//				if (vars[i].equals(n)) {
+//					num = values[i];
+//					en = true;
+//				}
+//			}
+//		}
+//		switch (O) {
+//		case "north":
+//			while (!(robotw.getOrientation() == 0)) {
+//				robotw.turnRight();
+//			}
+//			break;
+//		case "south":
+//			while (!(robotw.getOrientation() == 1)) {
+//				robotw.turnRight();
+//			}
+//			break;
+//		case "east":
+//			while (!(robotw.getOrientation() == 2)) {
+//				robotw.turnRight();
+//			}
+//			break;
+//		case "west":
+//			while (!(robotw.getOrientation() == 3)) {
+//				robotw.turnRight();
+//			}
+//			break;
+//		}
+//		robotw.moveForward(num);
+//}
+//}
 boolean facing():
 {String O;}
 {
